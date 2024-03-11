@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("api")
@@ -30,8 +29,6 @@ public class PriceController {
         this.requestPriceCreateService = new RequestPriceCreateService();
     }
 
-
-//fecha de aplicación, identificador de producto, identificador de cadena.
     @GetMapping("/price")
     public ResponseEntity<ResponsePrice> getPrice(@RequestParam(value = "currentDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime currentDate, @RequestParam(value = "product")  Integer product, @RequestParam(value = "brand") Integer brand) throws PriceNotFoundException {
         RequestPrice request = requestPriceCreateService.createRequestPrice(currentDate, product, brand);
