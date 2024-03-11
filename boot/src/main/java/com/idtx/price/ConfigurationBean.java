@@ -4,7 +4,11 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.OpenAPI;
 import org.modelmapper.ModelMapper;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -12,6 +16,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+
 
 @Configuration
 public class ConfigurationBean {
@@ -45,9 +50,21 @@ public class ConfigurationBean {
         return properties;
     }
 
-
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    public OpenAPI apiInfo() {
+        return new OpenAPI().info(new Info().title("open api").version("1.0.0"));
+    }
+
+    @Bean
+    public GroupedOpenApi httpApi() {
+        return GroupedOpenApi.builder()
+                .group("http")
+                .pathsToMatch("/**")
+                .build();
     }
 }

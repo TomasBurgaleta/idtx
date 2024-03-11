@@ -13,3 +13,6 @@ Tecnologias usadas para esta prueba:
 8. Test funcionales end 2 end (cucumber)
 9. BBDD H2 
 10. Uso de git
+
+
+swagger : http://localhost:8080/swagger-ui/index.html#/
