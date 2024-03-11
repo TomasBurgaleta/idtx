@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("api")
@@ -21,31 +22,23 @@ public class PriceController {
 
     private final Logger log = LoggerFactory.getLogger(PriceController.class);
     private final PriceFinderService priceFinderService;
-    private final CheckRequestData checkRequestData;
+    private final RequestPriceCreateService requestPriceCreateService;
 
 
-    public PriceController(final PriceFinderService priceFinderService, final CheckRequestData checkRequestData) {
+    public PriceController(final PriceFinderService priceFinderService) {
         this.priceFinderService = priceFinderService;
-        this.checkRequestData = checkRequestData;
+        this.requestPriceCreateService = new RequestPriceCreateService();
     }
 
 
 //fecha de aplicación, identificador de producto, identificador de cadena.
     @GetMapping("/price")
     public ResponseEntity<ResponsePrice> getPrice(@RequestParam(value = "currentDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime currentDate, @RequestParam(value = "product")  Integer product, @RequestParam(value = "brand") Integer brand) throws PriceNotFoundException {
-        RequestPrice request = createRequestPrice(currentDate, product, brand);
+        RequestPrice request = requestPriceCreateService.createRequestPrice(currentDate, product, brand);
         log.info("reading request {} from price api", request);
-        ResponsePrice responsePrice = priceFinderService.getPriceByDateTime(request);
-        return ResponseEntity.ok().body(responsePrice);
+        return ResponseEntity.ok().body(priceFinderService.getPriceByDateTime(request));
     }
 
-    private RequestPrice createRequestPrice(LocalDateTime currentDate, Integer product, Integer brand) {
-        if(currentDate == null) {
-            currentDate = LocalDateTime.now();
-        }
-        RequestPrice request = new RequestPrice(currentDate, product, brand);
-        checkRequestData.verifyData(request);
-        return request;
-    }
+
 
 }

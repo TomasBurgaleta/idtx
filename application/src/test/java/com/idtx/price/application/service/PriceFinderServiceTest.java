@@ -71,11 +71,6 @@ class PriceFinderServiceTest {
 
 
     }
-
-
-
-
-
     private RequestPrice createRequestPrice(LocalDateTime now, int product, int brand ) {
         return RequestPrice.builder().currentDate(now).product(product).brand(brand).build();
     }

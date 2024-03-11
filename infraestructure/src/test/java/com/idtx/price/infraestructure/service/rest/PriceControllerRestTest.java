@@ -28,7 +28,7 @@ public class PriceControllerRestTest {
     @Test
     public void testAllEmployees() throws Exception {
         ResultActions resultActions = mvc.perform(get("/price").contentType(MediaType.APPLICATION_JSON)
-                .param("currentDate", "2020-06-16T01:30:00.000-05:00")
+                .param("currentDate", "2020-06-16T01:30:00")
                 .param("product", "35455")
                 .param("brand", "1"))
                 .andDo(print())
