@@ -6,6 +6,6 @@ CREATE TABLE IF NOT EXISTS PRICES (
                                       `PRICE_LIST` int NOT NULL PRIMARY KEY,
                                       `PRODUCT_ID` int NOT NULL,
                                       `PRIORITY` int NOT NULL,
-                                      `PRICE` int NOT NULL,
+                                      `PRICE` decimal(20,2) NOT NULL,
                                       `CURR` varchar(3) NOT NULL
 );

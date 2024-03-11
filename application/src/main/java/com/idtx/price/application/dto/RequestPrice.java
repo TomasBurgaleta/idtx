@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @ToString
 @AllArgsConstructor
+@Builder
 public class RequestPrice {
 
     private LocalDateTime currentDate;

@@ -13,10 +13,4 @@ public interface PriceRepository extends JpaRepository<Price, Integer> {
     @Query(value = "select price from Price price where price.brandId = :brand and price.productId = :product and price.startDate < :moment and price.endDate > :moment")
     Stream<Price> getAllPriceByDateTime(@Param("moment") LocalDateTime date, @Param("product") Integer product, @Param("brand")  Integer brand);
 
-    @Query(value = "select price from Price price where price.brandId = :brand and price.productId = :product and price.startDate < :moment and price.endDate > :moment")
-    List<Price> getAllPriceByDateTime2List(@Param("moment") LocalDateTime moment , @Param("product") Integer product, @Param("brand") Integer brand);
-
-
-    List<Price> findAll();
-
 }

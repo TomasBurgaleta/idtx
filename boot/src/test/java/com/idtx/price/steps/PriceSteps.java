@@ -9,6 +9,7 @@ import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.junit.jupiter.api.Assertions;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @CucumberContextConfiguration
@@ -38,10 +39,12 @@ public class PriceSteps  extends CucumberSpringContextConfiguration {
         response = testRestTemplate.getForEntity(url, ResponsePrice.class);
     }
 
-    @Then("nos devuelve un {int}")
-    public void theUserIsAllowedToUseTheApp(int httpStatus) {
+    @Then("nos devuelve un {int} con un precio de {float}€")
+    public void theUserIsAllowedToUseTheApp(int httpStatus, float precio) {
         ResponsePrice responsePrice = response.getBody();
         Assertions.assertNotNull(responsePrice);
+        BigDecimal priceToCompare = new BigDecimal(Float.toString(precio));
+        Assertions.assertEquals(0, priceToCompare.compareTo(responsePrice.getPrice()));
         Assertions.assertEquals(httpStatus, response.getStatusCode().value());
     }
 

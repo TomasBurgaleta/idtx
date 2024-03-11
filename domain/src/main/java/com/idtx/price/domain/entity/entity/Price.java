@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @ToString
 @Getter
 @Setter
+@Builder
 public class Price implements Serializable {
 
     @Column(name = "BRAND_ID")

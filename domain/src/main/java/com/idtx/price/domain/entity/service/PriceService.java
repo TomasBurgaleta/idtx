@@ -20,7 +20,6 @@ public class PriceService {
     @Transactional
     public Optional<Price> getPriceByDateTime(LocalDateTime priceDate, Integer product, Integer brand) {
         Stream<Price> prices = priceRepository.getAllPriceByDateTime(priceDate, product, brand);
-        //return prices.min(priorityComparator).orElseThrow(() -> new PriceNotFoundException(("no entities")));
         return prices.min(priorityComparator);
     }
 
