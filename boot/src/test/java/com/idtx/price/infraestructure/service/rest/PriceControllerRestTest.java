@@ -21,9 +21,8 @@ public class PriceControllerRestTest {
     @Autowired
     private MockMvc mvc;
 
-
     @Test
-    public void testAllEmployees() throws Exception {
+    public void rest_happy_path_test() throws Exception {
         ResultActions resultActions = mvc.perform(get("/api/price").contentType(MediaType.APPLICATION_JSON)
                 .param("currentDate", "2020-06-16T01:30:00")
                 .param("product", "35455")
@@ -31,4 +30,23 @@ public class PriceControllerRestTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+    @Test
+    public void rest_not_found_test() throws Exception {
+        ResultActions resultActions = mvc.perform(get("/api/price").contentType(MediaType.APPLICATION_JSON)
+                        .param("currentDate", "2020-06-16T01:30:00")
+                        .param("product", "1111")
+                        .param("brand", "1"))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    public void rest_not_parameter_test() throws Exception {
+        ResultActions resultActions = mvc.perform(get("/api/price").contentType(MediaType.APPLICATION_JSON)
+                        .param("currentDate", "2020-06-16T01:30:00")
+                        .param("brand", "1"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
 }

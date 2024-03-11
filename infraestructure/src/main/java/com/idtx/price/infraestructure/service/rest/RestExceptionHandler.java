@@ -2,6 +2,8 @@ package com.idtx.price.infraestructure.service.rest;
 
 
 import com.idtx.price.application.exception.PriceNotFoundException;
+import com.idtx.price.infraestructure.dto.PriceErrorDto;
+import com.idtx.price.infraestructure.exception.PriceParameterException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,14 +14,25 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     @ExceptionHandler(PriceNotFoundException.class)
-    protected ResponseEntity<Object> handlePriceNotFoundException(
+    protected ResponseEntity<PriceErrorDto> handlePriceNotFoundException(
             PriceNotFoundException ex) {
-        return ResponseEntity.notFound().build();
+        PriceErrorDto error = PriceErrorDto.builder().message(ex.getMessage())
+                .exception("PriceNotFoundException").status(204).build();
+        return ResponseEntity.status(204).body(error);
+    }
+    @ExceptionHandler(PriceParameterException.class)
+    protected ResponseEntity<PriceErrorDto> handlePriceParameterException(
+            PriceParameterException ex) {
+        PriceErrorDto error = PriceErrorDto.builder().message(ex.getMessage())
+                .exception("PriceParameterException").status(404).build();
+        return ResponseEntity.status(404).body(error);
     }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleException(
             Exception ex) {
-        return ResponseEntity.status(500).build();
+        PriceErrorDto error = PriceErrorDto.builder().message(ex.getMessage())
+                .exception("Exception").status(500).build();
+        return ResponseEntity.status(500).body(error);
     }
 }
