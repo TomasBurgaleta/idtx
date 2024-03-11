@@ -1,6 +1,15 @@
 Feature: Prices
 
-  Scenario: llamada 1 rest a price
+  Scenario Outline: llamada 1 rest a price
+
     Given peticion a la API "price"
-    When a las 10:00 del día 16 para el producto 35455 para el brand 1
-    Then nos devuelve un 200 con datos
+    When a las <hora>:<minuto> del día <dia> para el producto <producto> para el brand <brand>
+    Then nos devuelve un <httpStatus>
+
+    Examples:
+      | hora  | minuto | dia | producto | brand | httpStatus |
+      | 10    | 00     | 14  | 35455    | 1     | 200        |
+      | 16    | 00     | 14  | 35455    | 1     | 200        |
+      | 21    | 00     | 14  | 35455    | 1     | 200        |
+      | 10    | 00     | 15  | 35455    | 1     | 200        |
+      | 21    | 00     | 16  | 35455    | 1     | 200        |
