@@ -1,11 +1,11 @@
 package com.idtx.price.steps;
 
 import com.idtx.price.CucumberSpringContextConfiguration;
+import com.idtx.price.application.dto.ResponsePrice;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.junit.jupiter.api.Assertions;
 
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @CucumberContextConfiguration
 public class PriceSteps  extends CucumberSpringContextConfiguration {
 
-    private ResponseEntity<String> response;
+    private ResponseEntity<ResponsePrice> response;
 
 
     private static final String API = "/api/";
@@ -24,7 +24,6 @@ public class PriceSteps  extends CucumberSpringContextConfiguration {
     private static final int MES = 6;
     private static final int ANIO  = 2020;
 
-    private String url = "";
     private String apiName = "";
 
     @Given("peticion a la API {string}")
@@ -36,12 +35,13 @@ public class PriceSteps  extends CucumberSpringContextConfiguration {
     public void theUserTriesToLoginAsAdmin(int hora, int minuto, int dia, int productoId, int brandId) {
         LocalDateTime momento = LocalDateTime.of(ANIO, MES, dia, hora, minuto);
         String url = creteUrl(momento, productoId, brandId);
-        response = testRestTemplate.getForEntity(url, String.class);
-        //response = testRestTemplate.getForEntity("/price?currentDate=2020-06-16T01:30:00.000-05:00&product=35455&brand=1", String.class);
+        response = testRestTemplate.getForEntity(url, ResponsePrice.class);
     }
 
-    @Then("nos devuelve un {int} con datos")
+    @Then("nos devuelve un {int}")
     public void theUserIsAllowedToUseTheApp(int httpStatus) {
+        ResponsePrice responsePrice = response.getBody();
+        Assertions.assertNotNull(responsePrice);
         Assertions.assertEquals(httpStatus, response.getStatusCode().value());
     }
 
