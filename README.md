@@ -17,7 +17,7 @@ Tecnologias usadas para esta prueba:
 
 Modo de ejecucion de la app:
 
-Entrar en la consola y ejecutar este comando
+Entrar en la consola y ejecutar este comando para instalar y ejecutar 
 
 `./mvnw install && ./mvnw spring-boot:run -pl boot`
 
@@ -30,3 +30,8 @@ http://localhost:8080/api/price?currentDate=2020-06-16T01:30:00&product=35455&br
 Tambien se puede entrar en la consola swagger y ejecutar las llamadas
 
  http://localhost:8080/swagger-ui/index.html#/
+
+tambien se puede ver un reporte de cucumber
+
+`[ruta raiz proyecto]/boot/target/cucumber-reports/Cucumber.html`
+
