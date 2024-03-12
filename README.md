@@ -25,7 +25,7 @@ Se puede ejecutar el servicio rest de varias maneras:
 
 la mas básica es en un navegador o en postman con una llamada de este tipo:
 
-[localhost:8080/api/price?currentDate=2020-06-16T01:30:00&product=35455&brand=1]()
+http://localhost:8080/api/price?currentDate=2020-06-16T01:30:00&product=35455&brand=1
 
 Tambien se puede entrar en la consola swagger y ejecutar las llamadas
 
