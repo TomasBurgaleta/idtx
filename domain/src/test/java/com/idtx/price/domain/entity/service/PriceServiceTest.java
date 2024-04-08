@@ -1,5 +1,6 @@
 package com.idtx.price.domain.entity.service;
 
+import com.idtx.price.domain.entity.dto.PriceDomain;
 import com.idtx.price.domain.entity.entity.Price;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,9 @@ class PriceServiceTest {
     @Mock
     private PriceRepository priceRepository;
 
+    @Mock
+    private PriceDomainMapper priceDomainMapper;
+
     @InjectMocks
     private PriceService priceService;
 
@@ -30,10 +34,12 @@ class PriceServiceTest {
         int product = 333;
         int brand = 1;
         when(priceRepository.getPriceByDateTime(eq(now), eq(product), eq(brand))).thenReturn(Optional.empty());
-        Optional<Price> result = priceService.getPriceByDateTime(now, product, brand);
+        when(priceDomainMapper.convertToPriceDomain(Optional.empty())).thenReturn(Optional.empty());
+        Optional<PriceDomain> result = priceService.getPriceByDateTime(now, product, brand);
 
         assertThat(result).isEmpty();
         verify(priceRepository, atLeastOnce()).getPriceByDateTime(eq(now), eq(product), eq(brand));
+        verify(priceDomainMapper, atLeastOnce()).convertToPriceDomain(any());
 
     }
 
@@ -44,9 +50,12 @@ class PriceServiceTest {
         int product = 333;
         int brand = 1;
         Price price2 = createPrice(2,2, BigDecimal.TEN);
+        PriceDomain priceDomain = PriceDomain.builder().priority(2).price(BigDecimal.TEN).priceList(2).build();
 
         when(priceRepository.getPriceByDateTime(eq(now), eq(product), eq(brand))).thenReturn(Optional.of(price2));
-        Optional<Price> result = priceService.getPriceByDateTime(now, product, brand);
+        when(priceDomainMapper.convertToPriceDomain(any())).thenReturn(Optional.of(priceDomain));
+
+        Optional<PriceDomain> result = priceService.getPriceByDateTime(now, product, brand);
 
         assertThat(result).isNotEmpty();
         assertThat(result.get().getPriority()).isEqualTo(2);
