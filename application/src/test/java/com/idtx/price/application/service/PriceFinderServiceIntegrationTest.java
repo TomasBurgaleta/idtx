@@ -13,8 +13,7 @@ import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -24,14 +23,12 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PriceFinderServiceIntegrationTest {
 
-
-    private PriceService priceService;
     @Mock
     private PriceRepository priceRepository;
     @Mock
     private ModelMapper modelMapper;
 
-    private PriceFinderService priceFinderService;
+
 
     @Test
     void integration_happy_path_test() {
@@ -39,16 +36,14 @@ class PriceFinderServiceIntegrationTest {
         int product = 333;
         int brand = 1;
 
-        Price price1 = createPrice(1,0, BigDecimal.ONE);
         Price price2 = createPrice(2,2, BigDecimal.TEN);
-        Price price3 = createPrice(3,1, BigDecimal.valueOf(5));
-        List<Price> prices = Arrays.asList(price1, price2, price3);
         RequestPrice requestPrice = createRequestPrice(now, product, brand);
 
-        priceService = new PriceService(priceRepository);
-        priceFinderService = new PriceFinderService(priceService, modelMapper);
+        PriceService priceService = new PriceService(priceRepository);
+        PriceModelMapper priceModelMapper = new PriceModelMapper(modelMapper);
+        PriceFinderService priceFinderService = new PriceFinderService(priceService, priceModelMapper);
 
-        when(priceRepository.getAllPriceByDateTime(eq(now), eq(product), eq(brand))).thenReturn(prices.stream());
+        when(priceRepository.getPriceByDateTime(eq(now), eq(product), eq(brand))).thenReturn(Optional.of(price2));
         when(modelMapper.map(any(), eq(ResponsePrice.class))).thenReturn(new ResponsePrice());
 
         ResponsePrice responsePrice = priceFinderService.getPriceByDateTime(requestPrice);
@@ -56,7 +51,7 @@ class PriceFinderServiceIntegrationTest {
         assertThat(responsePrice.getCurrentLocalDate()).isEqualTo(now);
 
         verify(modelMapper, atLeastOnce()).map(any(), eq(ResponsePrice.class));
-        verify(priceRepository, atLeastOnce()).getAllPriceByDateTime(eq(now), eq(product), eq(brand));
+        verify(priceRepository, atLeastOnce()).getPriceByDateTime(eq(now), eq(product), eq(brand));
 
     }
 

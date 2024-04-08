@@ -17,15 +17,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<PriceErrorDto> handlePriceNotFoundException(
             PriceNotFoundException ex) {
         PriceErrorDto error = PriceErrorDto.builder().message(ex.getMessage())
-                .exception("PriceNotFoundException").status(204).build();
-        return ResponseEntity.status(204).body(error);
+                .exception("PriceNotFoundException").status(404).build();
+        return ResponseEntity.status(404).body(error);
     }
     @ExceptionHandler(PriceParameterException.class)
     protected ResponseEntity<PriceErrorDto> handlePriceParameterException(
             PriceParameterException ex) {
         PriceErrorDto error = PriceErrorDto.builder().message(ex.getMessage())
-                .exception("PriceParameterException").status(404).build();
-        return ResponseEntity.status(404).body(error);
+                .exception("PriceParameterException").status(400).build();
+        return ResponseEntity.status(400).body(error);
     }
 
     @ExceptionHandler(Exception.class)

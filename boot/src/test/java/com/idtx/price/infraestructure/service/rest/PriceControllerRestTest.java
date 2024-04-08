@@ -37,7 +37,7 @@ public class PriceControllerRestTest {
                         .param("product", "1111")
                         .param("brand", "1"))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test

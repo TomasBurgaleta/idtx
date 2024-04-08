@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,7 +26,7 @@ class PriceFinderServiceTest {
     @Mock
     private  PriceService priceService;
     @Mock
-    private ModelMapper modelMapper;
+    private PriceModelMapper priceModelMapper;
     @InjectMocks
     private PriceFinderService priceFinderService;
 
@@ -37,10 +36,11 @@ class PriceFinderServiceTest {
         int product = 333;
         int brand = 1;
         RequestPrice requestPrice = createRequestPrice(now, product, brand);
-        Optional<Price> priceOptional = Optional.of(createPrice(1,0, BigDecimal.ONE));
-
+        Price price = createPrice(1,0, BigDecimal.ONE);
+        Optional<Price> priceOptional = Optional.of(price);
+        ResponsePrice response = ResponsePrice.builder().priceList(1).currentLocalDate(now).build();
         when(priceService.getPriceByDateTime(now, product, brand)).thenReturn(priceOptional);
-        when(modelMapper.map(priceOptional.get(), ResponsePrice.class)).thenReturn(new ResponsePrice());
+        when(priceModelMapper.convertToDto(price, now)).thenReturn(response);
 
         ResponsePrice responsePrice = priceFinderService.getPriceByDateTime(requestPrice);
 
@@ -48,7 +48,7 @@ class PriceFinderServiceTest {
         assertThat(responsePrice.getCurrentLocalDate()).isEqualTo(now);
 
         verify(priceService, atLeastOnce()).getPriceByDateTime(eq(now), eq(product), eq(brand));
-        verify(modelMapper, atLeastOnce()).map(priceOptional.get(), ResponsePrice.class);
+        verify(priceModelMapper, atLeastOnce()).convertToDto(price, now);
 
     }
 
@@ -67,7 +67,7 @@ class PriceFinderServiceTest {
         );
 
         verify(priceService, atLeastOnce()).getPriceByDateTime(eq(now), eq(product), eq(brand));
-        verify(modelMapper, never()).map(any(), any());
+        verify(priceModelMapper, never()).convertToDto(any(), any());
 
 
     }
