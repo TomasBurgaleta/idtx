@@ -2,7 +2,9 @@ package com.idtx.price.application.service;
 
 import com.idtx.price.application.dto.RequestPrice;
 import com.idtx.price.application.dto.ResponsePrice;
+import com.idtx.price.domain.entity.dto.PriceDomain;
 import com.idtx.price.domain.entity.entity.Price;
+import com.idtx.price.domain.entity.service.PriceDomainMapper;
 import com.idtx.price.domain.entity.service.PriceRepository;
 import com.idtx.price.domain.entity.service.PriceService;
 import org.junit.jupiter.api.Test;
@@ -29,22 +31,23 @@ class PriceFinderServiceIntegrationTest {
     private ModelMapper modelMapper;
 
 
-
     @Test
     void integration_happy_path_test() {
         LocalDateTime now = LocalDateTime.now();
         int product = 333;
         int brand = 1;
 
-        Price price2 = createPrice(2,2, BigDecimal.TEN);
+        Price price = createPrice(2,2, BigDecimal.TEN);
+        PriceDomain priceDomain = PriceDomain.builder().priceList(2).priority(2).price(BigDecimal.TEN).build();
         RequestPrice requestPrice = createRequestPrice(now, product, brand);
+        PriceDomainMapper priceDomainMapper = new PriceDomainMapper(modelMapper);
+        PriceService priceService = new PriceService(priceRepository, priceDomainMapper);
+        PriceResponseMapper priceResponseMapper = new PriceResponseMapper(modelMapper);
+        PriceFinderService priceFinderService = new PriceFinderService(priceService, priceResponseMapper);
 
-        PriceService priceService = new PriceService(priceRepository);
-        PriceModelMapper priceModelMapper = new PriceModelMapper(modelMapper);
-        PriceFinderService priceFinderService = new PriceFinderService(priceService, priceModelMapper);
-
-        when(priceRepository.getPriceByDateTime(eq(now), eq(product), eq(brand))).thenReturn(Optional.of(price2));
+        when(priceRepository.getPriceByDateTime(eq(now), eq(product), eq(brand))).thenReturn(Optional.of(price));
         when(modelMapper.map(any(), eq(ResponsePrice.class))).thenReturn(new ResponsePrice());
+        when(modelMapper.map(any(), eq(PriceDomain.class))).thenReturn(priceDomain);
 
         ResponsePrice responsePrice = priceFinderService.getPriceByDateTime(requestPrice);
         assertThat(responsePrice).isNotNull();

@@ -3,7 +3,7 @@ package com.idtx.price.application.service;
 import com.idtx.price.application.dto.RequestPrice;
 import com.idtx.price.application.dto.ResponsePrice;
 import com.idtx.price.application.exception.PriceNotFoundException;
-import com.idtx.price.domain.entity.entity.Price;
+import com.idtx.price.domain.entity.dto.PriceDomain;
 import com.idtx.price.domain.entity.service.PriceService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +26,7 @@ class PriceFinderServiceTest {
     @Mock
     private  PriceService priceService;
     @Mock
-    private PriceModelMapper priceModelMapper;
+    private PriceResponseMapper priceResponseMapper;
     @InjectMocks
     private PriceFinderService priceFinderService;
 
@@ -36,11 +36,11 @@ class PriceFinderServiceTest {
         int product = 333;
         int brand = 1;
         RequestPrice requestPrice = createRequestPrice(now, product, brand);
-        Price price = createPrice(1,0, BigDecimal.ONE);
-        Optional<Price> priceOptional = Optional.of(price);
+        PriceDomain price = createPrice(1,0, BigDecimal.ONE);
+        Optional<PriceDomain> priceOptional = Optional.of(price);
         ResponsePrice response = ResponsePrice.builder().priceList(1).currentLocalDate(now).build();
         when(priceService.getPriceByDateTime(now, product, brand)).thenReturn(priceOptional);
-        when(priceModelMapper.convertToDto(price, now)).thenReturn(response);
+        when(priceResponseMapper.convertToDto(price, now)).thenReturn(response);
 
         ResponsePrice responsePrice = priceFinderService.getPriceByDateTime(requestPrice);
 
@@ -48,7 +48,7 @@ class PriceFinderServiceTest {
         assertThat(responsePrice.getCurrentLocalDate()).isEqualTo(now);
 
         verify(priceService, atLeastOnce()).getPriceByDateTime(eq(now), eq(product), eq(brand));
-        verify(priceModelMapper, atLeastOnce()).convertToDto(price, now);
+        verify(priceResponseMapper, atLeastOnce()).convertToDto(price, now);
 
     }
 
@@ -58,7 +58,7 @@ class PriceFinderServiceTest {
         int product = 333;
         int brand = 1;
         RequestPrice requestPrice = createRequestPrice(now, product, brand);
-        Optional<Price> priceOptional = Optional.empty();
+        Optional<PriceDomain> priceOptional = Optional.empty();
 
         when(priceService.getPriceByDateTime(now, product, brand)).thenReturn(priceOptional);
         PriceNotFoundException thrown =  assertThrows(
@@ -67,7 +67,7 @@ class PriceFinderServiceTest {
         );
 
         verify(priceService, atLeastOnce()).getPriceByDateTime(eq(now), eq(product), eq(brand));
-        verify(priceModelMapper, never()).convertToDto(any(), any());
+        verify(priceResponseMapper, never()).convertToDto(any(), any());
 
 
     }
@@ -75,7 +75,7 @@ class PriceFinderServiceTest {
         return RequestPrice.builder().currentDate(now).product(product).brand(brand).build();
     }
 
-    private Price createPrice(int priceListId, int priority, BigDecimal price) {
-        return Price.builder().priceList(priceListId).priority(priority).price(price).build();
+    private PriceDomain createPrice(int priceListId, int priority, BigDecimal price) {
+        return PriceDomain.builder().priceList(priceListId).priority(priority).price(price).build();
     }
 }
