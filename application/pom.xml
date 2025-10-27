@@ -16,6 +16,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <logback.version>1.5.19</logback.version>
         <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
     </properties>
 

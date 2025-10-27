@@ -5,6 +5,7 @@ import com.idtx.price.domain.entity.entity.Price;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -15,8 +16,11 @@ public class PriceDomainMapper {
         this.modelMapper = modelMapper;
     }
 
-    public Optional<PriceDomain> convertToPriceDomain(Optional<Price> price) {
-        return price.map(pr -> modelMapper.map(pr, PriceDomain.class));
+    public Optional<PriceDomain> convertToPriceDomain(Price price) {
+        if(Objects.nonNull(price)) {
+            return Optional.of(modelMapper.map(price, PriceDomain.class));
+        }
+        return Optional.empty();
 
     }
 }

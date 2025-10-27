@@ -26,6 +26,8 @@
         <java.version>21</java.version>
         <cucumber.version>7.6.0</cucumber.version>
         <junit.platform.version>1.10.2</junit.platform.version>
+        <versionApplication>0.0.1-SNAPSHOT</versionApplication>
+        <logback.version>1.5.19</logback.version>
     </properties>
 
 

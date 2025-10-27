@@ -34,7 +34,7 @@ class PriceServiceTest {
         int product = 333;
         int brand = 1;
         when(priceRepository.getPriceByDateTime(eq(now), eq(product), eq(brand))).thenReturn(Optional.empty());
-        when(priceDomainMapper.convertToPriceDomain(Optional.empty())).thenReturn(Optional.empty());
+        when(priceDomainMapper.convertToPriceDomain(null)).thenReturn(Optional.empty());
         Optional<PriceDomain> result = priceService.getPriceByDateTime(now, product, brand);
 
         assertThat(result).isEmpty();

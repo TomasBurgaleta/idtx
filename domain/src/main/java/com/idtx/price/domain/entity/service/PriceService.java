@@ -21,7 +21,7 @@ public class PriceService {
     @Transactional
     public Optional<PriceDomain> getPriceByDateTime(LocalDateTime priceDate, Integer product, Integer brand) {
         Optional<Price> price =  priceRepository.getPriceByDateTime(priceDate, product, brand);
-        return priceDomainMapper.convertToPriceDomain(price);
+        return priceDomainMapper.convertToPriceDomain(price.orElse(null));
     }
 
 
